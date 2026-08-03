@@ -2,8 +2,6 @@
 
 Public-facing website for **ALCOVE** (Activating Living through Community-Oriented Volunteer Engagement), a Humana Foundation–funded research project at Florida State University.
 
-**Live site:** https://alcove-fsu.github.io
-
 ---
 
 ## Repo contents
