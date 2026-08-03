@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<!--
+=============================================================================
+  ALCOVE: Public Project Website
+  Florida State University · Funded by the Humana Foundation
+=============================================================================
+
+  WHAT THIS FILE IS
+  -----------------
+  The entire website is this one file. There is no build step, no npm, no
+  framework. HTML, CSS, and JavaScript all live here. To preview changes,
+  just open index.html in a browser. To publish, commit and push, GitHub
+  Pages redeploys automatically in about a minute.
+
+  HOW IT'S ORGANIZED
+  ------------------
+    <head>    Page title, description, social sharing tags, font loading
+    <style>   All CSS, grouped by section with /* ---- banner ---- */ comments
+    <body>    Page content, one <section> per site section
+    <script>  Scroll animations (progress bar, reveals, count-up, active nav)
+
+  EDITING TEXT
+  ------------
+  Almost all copy changes happen inside <body>. Find the section you want by
+  its id (e.g. id="team"), edit the text between the tags, save, refresh.
+  You do not need to touch the CSS to change wording.
+
+  EDITING COLORS / FONTS
+  ----------------------
+  Everything visual is controlled by the variables in :root at the top of
+  <style>. Change --gold once and it updates across the whole site.
+
+  BEFORE CHANGING FACTUAL CLAIMS: PLEASE READ
+  --------------------------------------------
+  This page makes public statements about a funded research study with human
+  participants. Some content is NOT safe to edit casually:
+
+    - IRB / ethics wording (FAQ 05)
+    - Eligibility criteria (FAQ 01)
+    - Enrollment timing (FAQ 02)
+    - Cost and participant incentives (FAQ 03)
+    - Named team members and community partner organizations
+    - The Humana Foundation acknowledgment in the footer
+
+  These come from the grant application, project charter, and work plan.
+  Please clear changes to any of them with Dr. He before pushing.
+
+  DO NOT ADD TO THIS PAGE
+  -----------------------
+  Per the MPI meeting (Aug 2026), the following are internal-only and must
+  not appear publicly: the commercialization / licensing pathway, Volunteer
+  Florida integration plans, and the future skills/talent marketplace concept.
+
+  KNOWN OPEN QUESTIONS (as of last edit)
+  --------------------------------------
+    1. Should the site mention the New York City site? Meeting notes say
+       "Tallahassee + NYC"; this page currently says North Florida only.
+    2. Is the concierge publicly named "Vera"? Not referenced here yet.
+    3. Step 02 copy still reads volunteering-first; the activity database
+       scope has broadened to any structured, purposeful, regular group
+       activity. May want to revise.
+
+  MAINTAINERS
+  -----------
+  Dhruv Kale: Application Developer
+
+
+=============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Browser tab title and Google search result title -->
+<title>ALCOVE: A Personalized AI Concierge for Older Adults | Florida State University</title>
+
+<!-- Text shown under the title in Google search results -->
+<meta name="description" content="ALCOVE is a Humana Foundation–funded research project at Florida State University developing an AI concierge that connects older adults living alone with meaningful, regularly-scheduled group activities in their community.">
+
+<!-- How the link previews when shared on LinkedIn, Slack, Facebook, etc. -->
+<meta property="og:title" content="ALCOVE: A Personalized AI Concierge for Older Adults">
+<meta property="og:description" content="A Humana Foundation–funded research project at Florida State University connecting older adults with meaningful community activity.">
+<meta property="og:type" content="website">
+<!-- TODO: add og:image once we have a project image (1200x630px recommended) -->
+
+<!-- Google Fonts: Fraunces = headings/display, Source Sans 3 = body text -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ==========================================================================
+     DESIGN TOKENS
+     Change a value here and it updates everywhere on the site.
+     ========================================================================== */
+  :root{
+    /* --- Colors --- */
+    --ink:#0F313A;                    /* Primary text: deep blue-green */
+    --ink-mid:#3D5C64;                /* Body paragraphs, slightly lighter */
+    --ink-soft:#6B858B;               /* Small labels, captions, inactive nav */
+    --paper:#FFFFFF;                  /* Default page background */
+    --wash:#EAF1ED;                   /* Pale sage: alternating section bg */
+    --wash-deep:#DCE8E2;              /* Slightly darker sage for hairlines */
+    --gold:#A8730F;                   /* Accent: links, numbers, highlights */
+    --gold-lift:#C98D1B;              /* Lighter gold, used in progress bar */
+    --rule:rgba(15,49,58,.14);        /* Standard divider line color */
+
+    /* --- Layout --- */
+    --measure:37rem;                  /* Max paragraph width (readability) */
+
+    /* --- Typography --- */
+    --display:"Fraunces",Georgia,serif;
+    --body:"Source Sans 3",system-ui,-apple-system,sans-serif;
+
+    /* --- Motion --- */
+    --ease:cubic-bezier(.22,.61,.36,1);  /* Shared easing curve */
+  }
+
+  /* ==========================================================================
+     BASE / RESET
+     ========================================================================== */
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}        /* Smooth scroll when nav links clicked */
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--body);font-size:1.125rem;line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;                /* Prevents sideways scroll on mobile */
+  }
+  a{color:var(--ink);text-decoration-color:var(--gold);text-underline-offset:.2em}
+
+  /* Visible outline when navigating by keyboard (accessibility requirement) */
+  a:focus-visible,button:focus-visible,summary:focus-visible{
+    outline:3px solid var(--gold);outline-offset:3px;border-radius:2px}
+
+  /* "Skip to main content" link hidden until keyboard-focused.
+     Screen reader users rely on this to bypass the nav. Do not remove. */
+  .skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:#fff;padding:.75rem 1.25rem;z-index:200}
+  .skip:focus{left:0}
+
+  /* Standard content container: caps width and centers it */
+  .wrap{width:min(72rem,calc(100% - 3rem));margin-inline:auto}
+  /* Narrower container for long paragraphs, easier to read */
+  .narrow{max-width:var(--measure)}
+
+  /* ==========================================================================
+     SCROLL PROGRESS BAR
+     Thin gold line across the very top showing how far down the page you are.
+     Width is set by JavaScript at the bottom of this file.
+     ========================================================================== */
+  .progress{
+    position:fixed;top:0;left:0;height:3px;width:100%;z-index:120;
+    background:transparent;pointer-events:none;
+  }
+  .progress i{
+    display:block;height:100%;width:0%;
+    background:linear-gradient(90deg,var(--gold),var(--gold-lift));
+    transition:width .1s linear;
+  }
+
+  /* ==========================================================================
+     MASTHEAD (sticky top bar with logo + nav)
+     ========================================================================== */
+  .masthead{
+    border-bottom:1px solid var(--rule);
+    position:sticky;top:0;z-index:100;   /* Stays pinned while scrolling */
+    background:rgba(255,255,255,.93);
+    backdrop-filter:saturate(150%) blur(10px);  /* Frosted-glass effect */
+  }
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:.9rem 0}
+  .brand{font-family:var(--display);font-size:1.3rem;font-weight:600;letter-spacing:.06em;
+    text-decoration:none;color:var(--ink)}
+  .brand span{color:var(--gold)}       /* The gold period after "ALCOVE" */
+
+  .nav{display:flex;gap:1.6rem;flex-wrap:wrap}
+  .nav a{
+    font-size:.95rem;font-weight:500;letter-spacing:.02em;text-decoration:none;
+    color:var(--ink-soft);padding:.25rem 0;position:relative;
+    transition:color .25s var(--ease);
+  }
+  /* Gold underline that wipes in on hover and on the current section */
+  .nav a::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+    background:var(--gold);transform:scaleX(0);transform-origin:left;
+    transition:transform .3s var(--ease);
+  }
+  .nav a:hover{color:var(--ink)}
+  .nav a:hover::after,.nav a.active::after{transform:scaleX(1)}
+  .nav a.active{color:var(--ink)}      /* .active is applied by JS on scroll */
+
+  /* On narrow screens: unstick the header and stack logo above nav */
+  @media(max-width:52rem){
+    .masthead{position:static}
+    .masthead .wrap{flex-direction:column;align-items:flex-start;gap:.65rem}
+    .nav{gap:1.1rem}
+  }
+
+  /* ==========================================================================
+     HERO (top of page)
+     ========================================================================== */
+  .hero{padding:6rem 0 4.5rem}
+
+  /* Small gold uppercase label with a leading dash */
+  .eyebrow{
+    font-size:.82rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--gold);margin:0 0 1.5rem;display:flex;align-items:center;gap:.85rem;
+  }
+  .eyebrow::before{content:"";width:2.5rem;height:1px;background:var(--gold);display:inline-block}
+
+  h1{
+    font-family:var(--display);font-weight:400;
+    /* clamp(min, preferred, max) scales smoothly with viewport width */
+    font-size:clamp(2.4rem,5.8vw,4.3rem);line-height:1.2;letter-spacing:-.018em;
+    margin:0 0 1.6rem;max-width:20ch;
+  }
+  h1 em{font-style:normal;color:var(--gold)}   /* <em> = gold, not italic */
+
+  /* --- Headline word-by-word reveal ---
+     JavaScript wraps each word in <span class="word"><i>word</i></span>.
+     The span clips overflow; the <i> starts pushed down and slides up.
+     padding/margin-bottom pair prevents descenders (g, y, p) being clipped. */
+  .word{display:inline-block;overflow:hidden;vertical-align:bottom;
+    padding-bottom:.12em;margin-bottom:-.12em}
+  .word i{
+    display:inline-block;font-style:inherit;color:inherit;
+    transform:translateY(105%);
+    transition:transform .8s var(--ease);
+  }
+  .ready .word i{transform:none}       /* .ready added to <body> on load */
+
+  /* Intro paragraph under the headline fades in after the words land */
+  .standfirst{
+    font-size:clamp(1.15rem,2vw,1.35rem);color:var(--ink-mid);max-width:44ch;margin:0;
+    opacity:0;transform:translateY(12px);
+    transition:opacity .8s var(--ease) .5s,transform .8s var(--ease) .5s;
+  }
+  .ready .standfirst{opacity:1;transform:none}
+
+  /* ==========================================================================
+     THE EXCHANGE (signature element)
+     Two columns: what a person says (left) and what ALCOVE suggests (right).
+     This is the page's main visual idea, it shows the product in one glance.
+     ========================================================================== */
+  .exchange{
+    margin-top:4.5rem;border-top:1px solid var(--rule);padding-top:3rem;
+    display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start;
+  }
+  .said{font-family:var(--display);font-size:clamp(1.5rem,3vw,2.15rem);
+    line-height:1.32;font-weight:400;margin:0;text-wrap:balance}
+  .said-label,.found-label{
+    font-size:.78rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-soft);display:block;
+  }
+  .said-label{margin-bottom:.9rem}
+
+  /* The recommendation card: mirrors how a real result will look in the app */
+  .found{
+    background:var(--wash);border-left:3px solid var(--gold);padding:1.6rem 1.7rem;
+    transition:transform .45s var(--ease),box-shadow .45s var(--ease);
+  }
+  .found:hover{transform:translateY(-4px);box-shadow:0 18px 40px -22px rgba(15,49,58,.4)}
+  .found-label{margin:0 0 .85rem}
+  .found-name{font-family:var(--display);font-size:1.35rem;font-weight:500;margin:0 0 .55rem;line-height:1.25}
+  .found dl{margin:.9rem 0 0;font-size:.98rem}   /* dl/dt/dd = the detail rows */
+  .found dt{font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-soft);margin-top:.7rem}
+  .found dd{margin:.1rem 0 0;color:var(--ink-mid)}
+  .found-why{margin:1.1rem 0 0;padding-top:1rem;border-top:1px solid var(--wash-deep);
+    font-size:.98rem;color:var(--ink-mid);font-style:italic}
+
+  /* Stack the two columns on tablet and mobile */
+  @media(max-width:52rem){
+    .hero{padding:3rem 0 2.5rem}
+    .exchange{grid-template-columns:1fr;gap:2rem;margin-top:2.75rem;padding-top:2rem}
+  }
+
+  /* ==========================================================================
+     SECTION SHELL
+     Every content section uses .band. Add .band-wash for the sage background
+     (sections alternate white / sage down the page).
+     ========================================================================== */
+  .band{padding:5rem 0;border-top:1px solid var(--rule);position:relative}
+  .band-wash{background:var(--wash);border-top:none}
+
+  /* The "01 The problem" marker above each section heading */
+  .sec-mark{
+    font-size:.78rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--gold);margin:0 0 1.1rem;display:flex;align-items:baseline;gap:.8rem;
+  }
+  .sec-mark b{font-family:var(--display);font-weight:600;font-size:.95rem;letter-spacing:.05em}
+  .sec-mark::after{content:"";flex:1;height:1px;background:var(--rule);max-width:8rem}
+
+  h2{font-family:var(--display);font-weight:400;
+    font-size:clamp(1.9rem,3.5vw,2.7rem);line-height:1.14;letter-spacing:-.012em;
+    margin:0 0 1.4rem;max-width:22ch}
+  h3{font-family:var(--display);font-weight:500;font-size:1.3rem;line-height:1.3;margin:0 0 .5rem}
+  p{margin:0 0 1.15rem;max-width:var(--measure)}
+  .lede{font-size:1.22rem;color:var(--ink-mid)}   /* Larger intro paragraph */
+
+  /* ==========================================================================
+     STAT FIGURES (the big gold numbers)
+     The numbers animate counting up, see data-count in the HTML below.
+     ========================================================================== */
+  .figures{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));
+    gap:2.5rem;margin:3.25rem 0 0;padding-top:2.5rem;border-top:1px solid var(--rule);
+  }
+  .fig-num{font-family:var(--display);font-size:clamp(2.4rem,4.5vw,3.2rem);font-weight:500;
+    line-height:1;color:var(--gold);display:block;margin-bottom:.55rem;
+    font-variant-numeric:tabular-nums}   /* Keeps digits same width while counting */
+  .fig-txt{font-size:.99rem;color:var(--ink-mid);margin:0;max-width:24ch}
+
+  /* ==========================================================================
+     HOW IT WORKS: numbered steps
+     Numbers (01, 02...) are generated automatically by CSS counters, so
+     adding or removing a .step renumbers the rest for you.
+     ========================================================================== */
+  .steps{counter-reset:step;margin-top:2.75rem}
+  .step{
+    counter-increment:step;display:grid;grid-template-columns:4.5rem 1fr;gap:1.75rem;
+    padding:2rem 1rem 2rem 0;border-top:1px solid var(--rule);align-items:start;
+    transition:background .4s var(--ease),padding-left .4s var(--ease);
+  }
+  .step:last-child{border-bottom:1px solid var(--rule)}
+  .step::before{
+    content:counter(step,decimal-leading-zero);   /* Renders as 01, 02, 03... */
+    font-family:var(--display);font-size:1.05rem;font-weight:600;color:var(--gold);
+    letter-spacing:.08em;padding-top:.35rem;transition:transform .4s var(--ease);
+  }
+  .step:hover{background:rgba(255,255,255,.6);padding-left:1rem}
+  .step:hover::before{transform:translateX(3px)}
+  .step p{margin:0;font-size:1.03rem;color:var(--ink-mid)}
+  @media(max-width:40rem){
+    .step{grid-template-columns:1fr;gap:.5rem;padding-right:0}
+    .step::before{padding-top:0}
+    .step:hover{padding-left:0}       /* Disable hover shift on touch devices */
+  }
+
+  /* ==========================================================================
+     STUDY PHASES (timeline cards)
+     ========================================================================== */
+  .phases{margin-top:2.75rem;display:grid;gap:1.25rem}
+  .phase{
+    background:var(--paper);border:1px solid var(--rule);padding:1.7rem 1.85rem;
+    display:grid;grid-template-columns:13rem 1fr;gap:1.75rem;align-items:start;
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);
+  }
+  .phase:hover{transform:translateY(-5px);border-color:rgba(168,115,15,.45);
+    box-shadow:0 20px 44px -26px rgba(15,49,58,.45)}
+  .phase-when{font-size:.82rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--gold);margin:.3rem 0 0}
+  .phase-when span{display:block;font-size:.86rem;letter-spacing:.02em;text-transform:none;
+    font-weight:400;color:var(--ink-soft);margin-top:.25rem}
+  .phase p{margin:0;font-size:1.02rem;color:var(--ink-mid)}
+  @media(max-width:46rem){.phase{grid-template-columns:1fr;gap:.75rem}}
+
+  /* ==========================================================================
+     TEAM
+     .group = one labelled block (PIs, Co-Is, Development, Consultants)
+     ========================================================================== */
+  .group{margin-top:3rem}
+  .group-label{font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-soft);margin:0 0 1.3rem;padding-bottom:.6rem;border-bottom:1px solid var(--rule)}
+  .people{list-style:none;margin:0;padding:0;
+    /* auto-fit means the grid reflows to however many columns fit */
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:1.7rem 2.5rem}
+  .people li{max-width:26rem;padding-left:0;border-left:2px solid transparent;
+    transition:padding-left .35s var(--ease),border-color .35s var(--ease)}
+  .people li:hover{padding-left:.9rem;border-left-color:var(--gold)}
+  .p-name{font-family:var(--display);font-size:1.13rem;font-weight:500;display:block}
+  .p-role{display:block;font-size:.88rem;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--gold);margin:.2rem 0 .3rem}
+  .p-affil{display:block;font-size:.97rem;color:var(--ink-mid);line-height:1.45}
+
+  /* ==========================================================================
+     COMMUNITY PARTNERS
+     The 1px gap plus a background color on the container creates the
+     hairline grid between tiles.
+     ========================================================================== */
+  .partners{list-style:none;margin:2.5rem 0 0;padding:0;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;
+    background:var(--rule);border:1px solid var(--rule)}
+  .partners li{background:var(--wash);padding:1.45rem 1.55rem;
+    transition:background .35s var(--ease),transform .35s var(--ease)}
+  .partners li:hover{background:var(--paper);transform:translateY(-3px)}
+  .partners strong{display:block;font-family:var(--display);font-weight:500;font-size:1.08rem}
+  .partners span{display:block;font-size:.95rem;color:var(--ink-mid);margin-top:.3rem}
+
+  /* ==========================================================================
+     FAQ ACCORDION
+     Uses native <details>/<summary> works without JavaScript.
+     Numbers are CSS counters, so reordering questions renumbers automatically.
+     ========================================================================== */
+  .faq{margin-top:2.75rem;counter-reset:q;border-top:1px solid var(--rule)}
+  .faq details{counter-increment:q;border-bottom:1px solid var(--rule)}
+  .faq summary{
+    list-style:none;cursor:pointer;padding:1.6rem 3rem 1.6rem 4.25rem;position:relative;
+    font-family:var(--display);font-size:1.22rem;font-weight:500;line-height:1.35;
+    transition:color .3s var(--ease);
+  }
+  .faq summary::-webkit-details-marker{display:none}   /* Hide default triangle */
+  .faq summary::before{                                /* Our 01, 02... number */
+    content:counter(q,decimal-leading-zero);position:absolute;left:0;top:1.85rem;
+    font-family:var(--body);font-size:.8rem;font-weight:600;letter-spacing:.12em;color:var(--gold);
+  }
+  .faq summary::after{                                 /* Chevron, rotates open */
+    content:"";position:absolute;right:.6rem;top:2rem;width:13px;height:13px;
+    border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);
+    transform:rotate(45deg);transition:transform .35s var(--ease);
+  }
+  .faq details[open] summary::after{transform:rotate(-135deg)}
+  .faq summary:hover{color:var(--gold)}
+  .faq-body{padding:0 3rem 1.75rem 4.25rem;animation:unfold .45s var(--ease)}
+  .faq-body p{font-size:1.03rem;color:var(--ink-mid);margin:0}
+  @keyframes unfold{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  @media(max-width:40rem){
+    .faq summary{padding:1.35rem 2.5rem 1.35rem 2.75rem;font-size:1.1rem}
+    .faq summary::before{top:1.6rem}
+    .faq-body{padding:0 2.5rem 1.5rem 2.75rem}
+  }
+
+  /* ==========================================================================
+     CONTACT
+     ========================================================================== */
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));
+    gap:2.5rem;margin-top:2rem}
+  .contact-grid h3{font-size:1.1rem}
+  .contact-grid p{font-size:1rem;color:var(--ink-mid);margin:0}
+
+  /* ==========================================================================
+     FOOTER
+     ========================================================================== */
+  footer{background:var(--ink);color:#DDE8E7;padding:4rem 0 2.5rem}
+  footer p{color:#B9CBCC;font-size:.97rem;max-width:52rem}
+  footer a{color:#fff;text-decoration-color:rgba(255,255,255,.5)}
+  /* Funder acknowledgment, wording is specified in the grant agreement */
+  .funder{font-family:var(--display);font-size:1.15rem;color:#fff;
+    padding-bottom:1.5rem;margin-bottom:1.5rem;
+    border-bottom:1px solid rgba(255,255,255,.18);max-width:52rem}
+  .colophon{margin-top:2rem;font-size:.87rem;color:#8FA8AA}
+
+  /* ==========================================================================
+     SCROLL REVEAL
+     Elements start invisible and shifted down; JavaScript adds .in when they
+     scroll into view, which triggers the transition.
+     ========================================================================== */
+  .rise{opacity:0;transform:translateY(22px);
+    transition:opacity .75s var(--ease),transform .75s var(--ease)}
+  .rise.in{opacity:1;transform:none}
+
+  /* ==========================================================================
+     REDUCED MOTION
+     Honors the visitor's OS setting for reduced motion. Matters here because
+     part of our audience is older adults, some of whom experience discomfort
+     from scroll animation. Please keep this block intact.
+     ========================================================================== */
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .rise,.standfirst{opacity:1!important;transform:none!important;transition:none!important}
+    .word i{transform:none!important;transition:none!important}
+    .progress{display:none}
+    .faq-body{animation:none}
+    *{transition-duration:.01ms!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- Accessibility: lets keyboard users jump past the nav. Keep as first element. -->
+<a class="skip" href="#main">Skip to main content</a>
+
+<!-- Scroll progress bar. Width controlled by JS at the bottom of this file. -->
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+
+
+<!-- ==========================================================================
+     MASTHEAD
+     To add a nav link: add an <a href="#sectionid"> here AND give the matching
+     <section> that id. The active-link highlighting picks it up automatically.
+     ========================================================================== -->
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="#top">ALCOVE<span>.</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#how">How it works</a>
+      <a href="#study">The study</a>
+      <a href="#team">Team</a>
+      <a href="#partners">Partners</a>
+      <a href="#questions">Questions</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+
+<main id="main">
+
+<!-- ==========================================================================
+     HERO
+     The data-split attribute on <h1> tells the JavaScript to animate this
+     headline word by word. Remove the attribute to disable that effect.
+     Use <em> for gold-highlighted words (it is styled gold, not italic).
+     ========================================================================== -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <p class="eyebrow">Florida State University &middot; Funded by the Humana Foundation</p>
+    <h1 data-split>Every community has room for one more. <em>Finding it</em> shouldn't be the hard part.</h1>
+    <p class="standfirst">ALCOVE is a research project building an AI concierge that helps older adults living alone find regular group activities that actually fit their life, from volunteering to exercise classes to shared-interest groups, and stay with them as they follow through.</p>
+
+    <!-- THE EXCHANGE the page's signature element.
+         Left = a person's own words. Right = a sample ALCOVE recommendation.
+         NOTE: "Golden Voices Singalong" is an ILLUSTRATIVE EXAMPLE, not a real
+         listing. If we ever swap in a real activity, confirm the details with
+         the organization first. -->
+    <div class="exchange">
+      <div>
+        <span class="said-label">Someone says</span>
+        <p class="said">&ldquo;I sang in a church choir for thirty years. I don't drive anymore, and I don't know anybody at the new place.&rdquo;</p>
+      </div>
+      <div class="found">
+        <p class="found-label">ALCOVE finds</p>
+        <p class="found-name">Golden Voices Singalong</p>
+        <!-- dt = label, dd = value. Add or remove pairs as needed. -->
+        <dl>
+          <dt>Where</dt><dd>Gadsden County Senior Center</dd>
+          <dt>When</dt><dd>Thursdays, 10:00 &ndash; 11:30 am</dd>
+          <dt>Getting there</dt><dd>On the bus line &middot; no experience needed</dd>
+        </dl>
+        <p class="found-why">Chosen because it's singing in a group, it's reachable without a car, and it happens every week, so there's a reason to go back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================================================
+     01 THE PROBLEM
+     ========================================================================== -->
+<section class="band" id="about">
+  <div class="wrap">
+    <p class="sec-mark"><b>01</b> The problem</p>
+    <h2>Loneliness is a health problem, not just a sad one.</h2>
+    <div class="narrow">
+      <p class="lede">Social isolation among older adults is linked to depression, cognitive decline, poorer chronic disease outcomes, and higher mortality risk.</p>
+      <p>Volunteering and community participation are a proven way back. But the people who need them most are often the hardest to reach: older adults living alone in rural, minority, and low-income communities. For them, the opportunities are hard to find, hard to get to, and hard to keep up with. Most digital tools hand people a list and walk away.</p>
+      <p>ALCOVE is built for what happens after the list: understanding what someone actually enjoys, what they can physically manage, how they get around, and what stops them from going, and then staying in the conversation.</p>
+    </div>
+
+    <!-- STAT FIGURES
+         data-count   = the number to animate up to
+         data-prefix  = text before the number (e.g. "$")
+         data-suffix  = text after the number  (e.g. "B" or "+")
+         The text inside the span is the fallback if JavaScript is off,
+         keep it matching the final animated value.
+         SOURCE NOTE: the $6.7B figure comes from the grant application. -->
+    <div class="figures">
+      <div><span class="fig-num" data-count="6.7" data-prefix="$" data-suffix="B">$6.7B</span>
+        <p class="fig-txt">Estimated excess annual Medicare spending associated with social isolation</p></div>
+      <div><span class="fig-num" data-count="50">50</span>
+        <p class="fig-txt">Older adults in the North Florida pilot study</p></div>
+      <div><span class="fig-num" data-count="24">24</span>
+        <p class="fig-txt">Months of development, co-design, and pilot testing</p></div>
+      <div><span class="fig-num" data-count="65" data-suffix="+">65+</span>
+        <p class="fig-txt">Age of participants, all living alone and at elevated risk of isolation</p></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================================================
+     02 THE SYSTEM
+     Step numbers are automatic (CSS counters). To add a step, copy a whole
+     <div class="step"> block, no renumbering needed.
+
+     OPEN ITEM: step 2 copy still frames the database as volunteering-first.
+     Per the Aug 2026 MPI meeting, scope broadened to any structured,
+     purposeful, regularly-attended group activity. Consider revising.
+     ========================================================================== -->
+<section class="band band-wash" id="how">
+  <div class="wrap">
+    <p class="sec-mark"><b>02</b> The system</p>
+    <h2>How ALCOVE works</h2>
+    <p class="lede narrow">Four steps, in order, every time someone asks for something to do.</p>
+
+    <div class="steps">
+      <div class="step"><div>
+        <h3>It learns what fits</h3>
+        <p>A short, plain-language conversation captures interests, physical ability, transportation access, social preferences, and personal goals: asked one question at a time, not as a form.</p>
+      </div></div>
+      <div class="step"><div>
+        <h3>It searches real local opportunities</h3>
+        <p>A curated database of North Florida activities, built from public listings and entered directly by senior centers, nonprofits, and faith-based groups, then reviewed and validated so the details are current and correct.</p>
+      </div></div>
+      <div class="step"><div>
+        <h3>It checks its own work</h3>
+        <p>Before any suggestion reaches a person, a second AI reviewer evaluates it for accuracy, relevance, safety, and plain readability. Suggestions that don't pass don't get sent.</p>
+      </div></div>
+      <div class="step"><div>
+        <h3>It stays with you</h3>
+        <p>Reminders, encouragement, and practical problem-solving when something gets in the way: a ride falls through, the weather turns, or walking in alone feels like too much.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================================================
+     03 THE RESEARCH
+     Dates and phase descriptions come from the ALCOVE Work Plan document.
+     Please keep them in sync if the work plan changes.
+
+     OPEN ITEM: this section says North Florida only. The Aug 2026 MPI notes
+     refer to "Tallahassee + NYC sites". Confirm with Dr. He before adding NYC.
+     ========================================================================== -->
+<section class="band" id="study">
+  <div class="wrap">
+    <p class="sec-mark"><b>03</b> The research</p>
+    <h2>The study</h2>
+    <div class="narrow">
+      <p class="lede">A two-phase, mixed-methods pilot designed with older adults, not just for them.</p>
+      <p>ALCOVE is developed through focus groups and iterative co-design workshops with older adults and community partners, then tested in a single-arm pilot with approximately 50 community-dwelling adults aged 65 and over across North Florida. Findings will inform a future NIH-funded randomized controlled trial.</p>
+    </div>
+
+    <div class="phases">
+      <div class="phase">
+        <p class="phase-when">Phase 1<span>Oct &ndash; Dec 2026</span></p>
+        <div><h3>Listening first</h3>
+        <p>Focus groups with older adults on the real barriers to social and volunteer participation. A Community Advisory Board is established, and construction of the community activity database begins.</p></div>
+      </div>
+      <div class="phase">
+        <p class="phase-when">Phase 2<span>Dec 2026 &ndash; Mar 2027</span></p>
+        <div><h3>Designing together</h3>
+        <p>Four iterative co-design workshops shape the system's features, tone, and recommendations. The AI system is built and tested internally against synthetic user profiles, followed by a usability evaluation with older adults.</p></div>
+      </div>
+      <div class="phase">
+        <p class="phase-when">Phase 3<span>Apr 2027 &ndash; Mar 2028</span></p>
+        <div><h3>The pilot</h3>
+        <p>Approximately 50 participants use ALCOVE over six months on their own phone or tablet. Weekly check-ins track activity, mood, social connection, and barriers, alongside assessments at the start, three months, and six months.</p></div>
+      </div>
+      <div class="phase">
+        <p class="phase-when">Phase 4<span>Apr &ndash; Sep 2028</span></p>
+        <div><h3>Sharing what we learn</h3>
+        <p>Analysis of outcomes in loneliness, social engagement, and emotional well-being; publications and conference presentations; and accessible summary reports delivered back to the community partners who made the work possible.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================================================
+     04 THE PEOPLE
+     Names, titles, and affiliations come from the grant application and the
+     Roles & Responsibilities document. Please do not add, remove, or retitle
+     anyone without checking with Dr. He, these are people's public credentials.
+
+     To add a person, copy one <li> block and fill in the three spans:
+       .p-name   full name with degree
+       .p-role   role on the project (renders gold, uppercase)
+       .p-affil  title and institution
+     ========================================================================== -->
+<section class="band band-wash" id="team">
+  <div class="wrap">
+    <p class="sec-mark"><b>04</b> The people</p>
+    <h2>Research team</h2>
+    <p class="lede narrow">A collaboration between Florida State University and Weill Cornell Medicine, spanning health informatics, gerontology, sociology, computer science, and geriatric medicine.</p>
+
+    <div class="group">
+      <p class="group-label">Principal investigators: Florida State University</p>
+      <ul class="people">
+        <li><span class="p-name">Zhe He, Ph.D.</span><span class="p-role">Contact Principal Investigator</span>
+          <span class="p-affil">Professor, School of Information; Director, Institute for Successful Longevity</span></li>
+        <li><span class="p-name">Mia Liza A. Lustria, Ph.D.</span><span class="p-role">Multiple Principal Investigator</span>
+          <span class="p-affil">Professor, School of Information</span></li>
+        <li><span class="p-name">Dawn Carr, Ph.D.</span><span class="p-role">Multiple Principal Investigator</span>
+          <span class="p-affil">Professor, Department of Sociology; Director, Claude Pepper Center</span></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <p class="group-label">Co-investigators</p>
+      <ul class="people">
+        <li><span class="p-name">Shayok Chakraborty, Ph.D.</span><span class="p-role">Co-Investigator</span>
+          <span class="p-affil">Associate Professor, Department of Computer Science, Florida State University</span></li>
+        <li><span class="p-name">Antonio Terracciano, Ph.D.</span><span class="p-role">Co-Investigator</span>
+          <span class="p-affil">Professor, Department of Geriatrics, College of Medicine, Florida State University</span></li>
+        <li><span class="p-name">Walter Boot, Ph.D.</span><span class="p-role">Co-Investigator &amp; WCM Site PI</span>
+          <span class="p-affil">Professor, Division of Geriatrics and Palliative Medicine, Weill Cornell Medicine</span></li>
+        <li><span class="p-name">Sara Czaja, Ph.D.</span><span class="p-role">Co-Investigator</span>
+          <span class="p-affil">Gladys and Roland Harriman Professor of Medicine; Professor of Gerontology, Weill Cornell Medicine</span></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <p class="group-label">Development</p>
+      <ul class="people">
+        <li><span class="p-name">Andrew Dilanchian</span><span class="p-role">Software Development Consultant</span>
+          <span class="p-affil">Database and interface development</span></li>
+        <li><span class="p-name">Dhruv Kale, M.S.</span><span class="p-role">Application Developer</span>
+          <span class="p-affil">School of Information, Florida State University</span></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <p class="group-label">Consultants</p>
+      <ul class="people">
+        <li><span class="p-name">Stephanie M. Carpenter, Ph.D.</span><span class="p-role">Consultant</span>
+          <span class="p-affil">Assistant Professor, Arizona State University</span></li>
+        <li><span class="p-name">Sheila Salyer</span><span class="p-role">Consultant</span>
+          <span class="p-affil">Executive Director, Tallahassee Senior Center</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================================================
+     05 THE COMMUNITY
+     Partner list comes from the grant's Community Engagement section and the
+     Project Charter partner table.
+
+     IMPORTANT: MOUs with some partners are still being formalized. Do not add
+     a new organization here until Dr. Carr or Dr. He confirms they have agreed
+     to be named publicly.
+     ========================================================================== -->
+<section class="band" id="partners">
+  <div class="wrap">
+    <p class="sec-mark"><b>05</b> The community</p>
+    <h2>Community partners</h2>
+    <p class="lede narrow">ALCOVE is built with the organizations that already know these communities. Partners support recruitment, validate local activity listings, and hold the project accountable to the people it serves.</p>
+
+    <ul class="partners">
+      <li><strong>Tallahassee Senior Center</strong><span>Recruitment, activity validation, community liaison</span></li>
+      <li><strong>Gadsden County Senior Center</strong><span>Recruitment and rural community access</span></li>
+      <li><strong>Coalition of Aging</strong><span>Community outreach and partner network</span></li>
+      <li><strong>ACT2 Program</strong><span>Participant recruitment and engagement</span></li>
+      <li><strong>Local faith-based organizations</strong><span>Outreach to minority and low-income older adults</span></li>
+      <li><strong>Community Advisory Board</strong><span>Older adults and partner representatives guiding the work throughout</span></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ==========================================================================
+     06 COMMON QUESTIONS
+     Uses native <details>/<summary>, so it works even without JavaScript.
+     Question numbers are automatic, reordering renumbers them for you.
+
+     ⚠ HIGH-CAUTION SECTION. These answers make public commitments about
+     eligibility, cost, timing, and research ethics. Every one of them must be
+     cleared with Dr. He before changing. In particular:
+
+       FAQ 02 enrollment timing must match the current work plan
+       FAQ 03 cost/incentives must match the approved budget
+       FAQ 05 IRB wording is deliberately future-tense. Approval has NOT
+                been granted yet (targeted March 2027). Do not change this to
+                say the study "is approved" until it actually is.
+     ========================================================================== -->
+<section class="band band-wash" id="questions">
+  <div class="wrap">
+    <p class="sec-mark"><b>06</b> Common questions</p>
+    <h2>Questions people ask</h2>
+
+    <div class="faq">
+      <details>
+        <summary>Who can take part in the study?</summary>
+        <div class="faq-body"><p>Adults aged 65 and over living in the North Florida study area, who live alone or are at elevated risk of social isolation, and who have access to a smartphone or tablet. Basic training on using the app is provided, you don't need to be comfortable with technology already.</p></div>
+      </details>
+      <details>
+        <summary>When does enrollment open?</summary>
+        <div class="faq-body"><p>Pilot enrollment is expected to begin in spring 2027, after the co-design and development phase is complete. Recruitment will run on a rolling basis through partner organizations. This page will be updated when enrollment opens.</p></div>
+      </details>
+      <details>
+        <summary>Does it cost anything to participate?</summary>
+        <div class="faq-body"><p>No. Participation is free, and enrolled participants receive incentives for completing study assessments.</p></div>
+      </details>
+      <details>
+        <summary>Is ALCOVE meant to replace human contact?</summary>
+        <div class="faq-body"><p>The opposite. ALCOVE's entire purpose is to get people out of the house and into rooms with other people. It is a way of finding and getting to real, in-person community activity and not a substitute for it.</p></div>
+      </details>
+      <details>
+        <summary>How is participant information handled?</summary>
+        <!-- Anonymity commitment below reflects the Aug 2026 MPI decision:
+             participants stay private to organizations until they opt in,
+             with the study coordinator acting as intermediary in the pilot. -->
+        <div class="faq-body"><p>ALCOVE is a research study. Study procedures will be reviewed and approved by the Florida State University Institutional Review Board before enrollment begins. Participants stay anonymous to community organizations unless and until they choose to express interest in a specific activity, and a study coordinator manages that introduction. Participants receive full details about data collection and use during the informed consent process.</p></div>
+      </details>
+      <details>
+        <summary>My organization runs activities for older adults. Can we be listed?</summary>
+        <!-- Deliberately does NOT promise a self-serve organization portal.
+             Per the Aug 2026 MPI meeting, the org-side portal is out of scope
+             for v1: listings are handled manually via the study coordinator. -->
+        <div class="faq-body"><p>Yes. Community organizations, senior centers, nonprofits, and faith-based groups in North Florida are invited to contribute and validate activity listings. Get in touch using the contact details below.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================================================
+     07 CONTACT
+     Only publish institutional email addresses here. Do not add personal
+     phone numbers or home/office addresses.
+     ========================================================================== -->
+<section class="band" id="contact">
+  <div class="wrap">
+    <p class="sec-mark"><b>07</b> Get in touch</p>
+    <h2>Contact</h2>
+    <div class="contact-grid">
+      <div><h3>Research inquiries</h3>
+        <p>Zhe He, Ph.D.<br>Contact Principal Investigator<br><a href="mailto:zhe@fsu.edu">zhe@fsu.edu</a></p></div>
+      <div><h3>Community partnerships</h3>
+        <p>Mia Liza A. Lustria, Ph.D.<br>Multiple Principal Investigator<br><a href="mailto:mlustria@fsu.edu">mlustria@fsu.edu</a></p></div>
+      <div><h3>Institute for Successful Longevity</h3>
+        <p>Florida State University<br>Tallahassee, Florida<br><a href="https://isl.fsu.edu">isl.fsu.edu</a></p></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+<!-- ==========================================================================
+     FOOTER
+     The funder line wording is specified in the grant agreement, do not
+     reword it. The closing note about recruitment not yet being open must be
+     removed once enrollment actually starts.
+     ========================================================================== -->
+<footer>
+  <div class="wrap">
+    <p class="funder">This project is funded by Humana Foundation.</p>
+    <p>ALCOVE: Activating Living through Community-Oriented Volunteer Engagement. A research project of the Institute for Successful Longevity and the School of Information at Florida State University, in collaboration with Weill Cornell Medicine.</p>
+    <p class="colophon">&copy; 2026 Florida State University. Recruitment for the pilot study has not yet begun; this page will be updated when enrollment opens.</p>
+  </div>
+</footer>
+
+
+<!-- ==========================================================================
+     JAVASCRIPT
+     Four independent features, all purely decorative. If any of this were
+     removed the site would still be fully readable and usable:
+       1. Headline word-by-word reveal
+       2. Scroll progress bar
+       3. Scroll-triggered fade-in of sections and cards
+       4. Count-up animation on the stat figures
+       5. Active nav link highlighting
+
+     Everything is wrapped in an IIFE (function(){ ... })() so nothing
+     leaks into the global scope.
+
+     The very first thing this does is check the visitor's reduced-motion
+     preference. If set, all animation is skipped. Please preserve that check.
+     ========================================================================== -->
+<script>
+(function(){
+  // Respect the OS-level "reduce motion" accessibility setting.
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- 1. Split the headline into words so each can animate separately ----
+     Walks the <h1>, wraps every word in <span class="word"><i>word</i></span>,
+     and preserves any inline tags (like <em>) by cloning them.
+     Each word gets a slightly longer delay, producing the cascade. */
+  var h1 = document.querySelector('[data-split]');
+  if (h1 && !reduce) {
+    var walk = function(node){
+      var out = [];
+      node.childNodes.forEach(function(child){
+        if (child.nodeType === 3) {                    // 3 = plain text node
+          child.textContent.split(/(\s+)/).forEach(function(tok){
+            if (!tok.trim()) { out.push(document.createTextNode(tok)); return; }
+            var w = document.createElement('span');
+            w.className = 'word';
+            var i = document.createElement('i');
+            i.textContent = tok;
+            w.appendChild(i);
+            out.push(w);
+          });
+        } else if (child.nodeType === 1) {             // 1 = element, e.g. <em>
+          var clone = child.cloneNode(false);          // copy the tag, not kids
+          walk(child).forEach(function(n){ clone.appendChild(n); });
+          out.push(clone);
+        }
+      });
+      return out;
+    };
+    var pieces = walk(h1);
+    h1.innerHTML = '';
+    pieces.forEach(function(n){ h1.appendChild(n); });
+    h1.querySelectorAll('.word i').forEach(function(el, idx){
+      el.style.transitionDelay = (idx * 45) + 'ms';    // 45ms between words
+    });
+  }
+  // Adding .ready to <body> triggers the CSS that slides the words up.
+  requestAnimationFrame(function(){ document.body.classList.add('ready'); });
+
+  // Nothing below this line runs if the visitor prefers reduced motion.
+  if (reduce) return;
+
+  /* ---- 2. Scroll progress bar ----
+     Sets the gold bar's width to the percentage of the page scrolled. */
+  var bar = document.getElementById('bar');
+  var onScroll = function(){
+    var h = document.documentElement;
+    var pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+    bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+  };
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ---- 3. Scroll-triggered reveals ----
+     IntersectionObserver fires when an element enters the viewport. We add
+     .rise (invisible + shifted down) up front, then .in to animate it in.
+     unobserve() means each element only animates once.
+     The -8% bottom margin makes it trigger slightly before fully visible. */
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, {rootMargin:'0px 0px -8% 0px'});
+
+  // Top-level children of each section fade in, staggered.
+  document.querySelectorAll('.band').forEach(function(band){
+    var kids = band.querySelectorAll(':scope > .wrap > *');
+    kids.forEach(function(el, i){
+      el.classList.add('rise');
+      el.style.transitionDelay = Math.min(i, 4) * 70 + 'ms';   // cap the delay
+      obs.observe(el);
+    });
+  });
+  // Individual cards fade in on their own, staggered in groups of six.
+  document.querySelectorAll('.phase, .partners li, .people li, .figures > div').forEach(function(el, i){
+    el.classList.add('rise');
+    el.style.transitionDelay = (i % 6) * 65 + 'ms';
+    obs.observe(el);
+  });
+
+  /* ---- 4. Count-up animation on the stat figures ----
+     Reads data-count / data-prefix / data-suffix from the HTML, then animates
+     from 0 to the target using an ease-out curve over 1.1 seconds. */
+  var countObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      countObs.unobserve(el);                        // only animate once
+      var target = parseFloat(el.dataset.count);
+      var dec = (el.dataset.count.indexOf('.') > -1) ? 1 : 0;  // decimal places
+      var pre = el.dataset.prefix || '';
+      var suf = el.dataset.suffix || '';
+      var start = performance.now(), dur = 1100;
+      var tick = function(now){
+        var p = Math.min(1, (now - start) / dur);
+        var eased = 1 - Math.pow(1 - p, 3);          // ease-out cubic
+        el.textContent = pre + (target * eased).toFixed(dec) + suf;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }, {rootMargin:'0px 0px -12% 0px'});
+  document.querySelectorAll('[data-count]').forEach(function(el){ countObs.observe(el); });
+
+  /* ---- 5. Active nav link highlighting ----
+     The rootMargin creates a thin detection band across the middle of the
+     screen; whichever section is in that band gets its nav link highlighted. */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var navObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      links.forEach(function(a){
+        a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+      });
+    });
+  }, {rootMargin:'-45% 0px -50% 0px'});
+  document.querySelectorAll('main section[id]').forEach(function(s){ navObs.observe(s); });
+})();
+</script>
+
+</body>
+</html>
