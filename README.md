@@ -11,8 +11,6 @@ index.html    The entire website: HTML, CSS, and JS in one file
 README.md     This file
 ```
 
-That's it. No build step, no dependencies, no npm install.
-
 ---
 
 ## Making a change
@@ -39,23 +37,6 @@ The file is heavily commented. Start by reading the comment block at the very to
 | Add a nav link | `<header class="masthead">` add `<a href="#id">` and give the section that `id` |
 
 Numbered lists (steps, FAQ) use CSS counters, so adding or reordering items renumbers everything automatically.
-
----
-
-## Before you push: please check
-
-This page makes **public statements about a funded research study involving human participants**. Some content carries real compliance weight.
-
-**Clear with Dr. He before changing:**
-- IRB / research ethics wording (FAQ 05)
-- Eligibility criteria (FAQ 01)
-- Enrollment timing (FAQ 02)
-- Cost and participant incentives (FAQ 03)
-- Team member names, titles, affiliations
-- Community partner organizations (some MOUs are still being formalized)
-- The Humana Foundation acknowledgment in the footer
-
-**Note on IRB wording:** FAQ 05 is deliberately written in future tense. IRB approval has not been granted yet (targeted March 2027). Do not change it to say the study "is approved" until it actually is.
 
 ---
 
