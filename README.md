@@ -16,10 +16,7 @@ README.md     This file
 ## Making a change
 
 1. Open `index.html` in a text editor
-2. Find the section you want (each is clearly marked with a comment banner)
-3. Edit, save
-4. Open `index.html` in a browser to preview
-5. Commit and push: GitHub Pages redeploys in about a minute
+2. Commit and push: GitHub Pages redeploys in about a minute
 
 The file is heavily commented. Start by reading the comment block at the very top, it explains the structure and flags anything that shouldn't be changed without approval.
 
@@ -50,10 +47,9 @@ Part of the audience for this project is older adults, so the site holds to a fe
 - The FAQ accordion uses native `<details>`/`<summary>` and works without JavaScript
 - Body text is 18px minimum, with generous line height
 
-Please keep these intact when editing.
-
 ---
 
 ## Maintainers
 
+- **Andrew Dilanchian** Software Development Consultant
 - **Dhruv Kale** Application Developer, School of Information, FSU
