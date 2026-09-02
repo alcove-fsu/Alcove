@@ -30,6 +30,16 @@
   Everything visual is controlled by the variables in :root at the top of
   <style>. Change --gold once and it updates across the whole site.
 
+  FILES
+  -----
+    index.html                        this page
+    assets/alcove-mark.png            badge, masthead
+    assets/alcove-wordmark.png        wordmark + tagline, masthead
+    assets/alcove-mark-light.png      badge, footer (light, for dark bg)
+    assets/alcove-wordmark-light.png  wordmark, footer (light, for dark bg)
+    assets/favicon.png                browser tab icon
+    assets/og-image.png               social sharing preview
+
   MAINTAINERS
   -----------
   Andrew Dilanchian: Software Development Consultant
@@ -53,7 +63,9 @@
 <meta property="og:title" content="ALCOVE: A Personalized AI Concierge for Older Adults">
 <meta property="og:description" content="A Humana Foundation–funded research project at Florida State University connecting older adults with meaningful community activity.">
 <meta property="og:type" content="website">
-<!-- TODO: add og:image once we have a project image (1200x630px recommended) -->
+<meta property="og:image" content="assets/og-image.png">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
 
 <!-- Google Fonts: Fraunces = headings/display, Source Sans 3 = body text -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -140,9 +152,15 @@
     backdrop-filter:saturate(150%) blur(10px);  /* Frosted-glass effect */
   }
   .masthead .wrap{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:.9rem 0}
-  .brand{font-family:var(--display);font-size:1.3rem;font-weight:600;letter-spacing:.06em;
-    text-decoration:none;color:var(--ink)}
-  .brand span{color:var(--gold)}       /* The gold period after "ALCOVE" */
+    /* Masthead brand: the ALCOVE badge plus the wordmark lockup. */
+  .brand{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+  .brand img.mark{height:54px;width:auto;display:block}   /* was 38px */
+  .brand img.word{height:32px;width:auto;display:block}   /* was 20px */
+  @media(max-width:34rem){
+    /* The wordmark is wide. On small screens the badge alone carries it. */
+    .brand img.word{display:none}
+    .brand img.mark{height:44px}                          /* was 34px */
+  }
 
   .nav{display:flex;gap:1.6rem;flex-wrap:wrap}
   .nav a{
@@ -405,6 +423,17 @@
   footer{background:var(--ink);color:#DDE8E7;padding:4rem 0 2.5rem}
   footer p{color:#B9CBCC;font-size:.97rem;max-width:52rem}
   footer a{color:#fff;text-decoration-color:rgba(255,255,255,.5)}
+    /* Footer logo lockup, light variant for the dark background */
+  .foot-brand{display:flex;align-items:center;gap:1.1rem;
+    padding-bottom:1.75rem;margin-bottom:1.75rem;
+    border-bottom:1px solid rgba(255,255,255,.18);max-width:52rem}
+  .foot-brand img.mark{height:84px;width:auto;display:block}   /* was 52px */
+  .foot-brand img.word{height:46px;width:auto;display:block}   /* was 26px */
+  @media(max-width:34rem){
+    .foot-brand img.mark{height:64px}                          /* was 44px */
+    .foot-brand img.word{height:36px}                          /* was 22px */
+  }
+
   /* Funder acknowledgment, wording is specified in the grant agreement */
   .funder{font-family:var(--display);font-size:1.15rem;color:#fff;
     padding-bottom:1.5rem;margin-bottom:1.5rem;
@@ -452,7 +481,10 @@
      ========================================================================== -->
 <header class="masthead">
   <div class="wrap">
-    <a class="brand" href="#top">ALCOVE<span>.</span></a>
+    <a class="brand" href="#top" aria-label="ALCOVE home">
+      <img class="mark" src="assets/alcove-mark.png" alt="">
+      <img class="word" src="assets/alcove-wordmark.png" alt="ALCOVE: Together, Engaged">
+    </a>
     <nav class="nav" aria-label="Sections">
       <a href="#about">About</a>
       <a href="#how">How it works</a>
@@ -675,6 +707,14 @@
           <span class="p-affil">Executive Director, Tallahassee Senior Center</span></li>
       </ul>
     </div>
+
+    <div class="group">
+      <p class="group-label">Project coordination</p>
+      <ul class="people">
+        <li><span class="p-name">Cait DeLucchi</span><span class="p-role">Project Coordinator</span>
+          <span class="p-affil">Florida State University</span></li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -784,6 +824,10 @@
      ========================================================================== -->
 <footer>
   <div class="wrap">
+    <div class="foot-brand">
+      <img class="mark" src="assets/alcove-mark-light.png" alt="">
+      <img class="word" src="assets/alcove-wordmark-light.png" alt="ALCOVE: Together, Engaged">
+    </div>
     <p class="funder">This project is funded by Humana Foundation.</p>
     <p>ALCOVE: Activating Living through Community-Oriented Volunteer Engagement. A research project of the Institute for Successful Longevity and the School of Information at Florida State University, in collaboration with Weill Cornell Medicine.</p>
     <p class="colophon">&copy; 2026 Florida State University. Recruitment for the pilot study has not yet begun; this page will be updated when enrollment opens.</p>
