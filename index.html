@@ -195,7 +195,7 @@
     font-size:.82rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
     color:var(--gold);margin:0 0 1.5rem;display:flex;align-items:center;gap:.85rem;
   }
-  .eyebrow::before{content:"";width:2.5rem;height:1px;background:var(--gold);display:inline-block}
+  /* .eyebrow::before{content:"";width:2.5rem;height:1px;background:var(--gold);display:inline-block} */
 
   h1{
     font-family:var(--display);font-weight:400;
@@ -245,7 +245,7 @@
 
   /* The recommendation card: mirrors how a real result will look in the app */
   .found{
-    background:var(--wash);border-left:3px solid var(--gold);padding:1.6rem 1.7rem;
+    background:var(--wash);padding:1.6rem 1.7rem;
     transition:transform .45s var(--ease),box-shadow .45s var(--ease);
   }
   .found:hover{transform:translateY(-4px);box-shadow:0 18px 40px -22px rgba(15,49,58,.4)}
@@ -278,7 +278,7 @@
     color:var(--gold);margin:0 0 1.1rem;display:flex;align-items:baseline;gap:.8rem;
   }
   .sec-mark b{font-family:var(--display);font-weight:600;font-size:.95rem;letter-spacing:.05em}
-  .sec-mark::after{content:"";flex:1;height:1px;background:var(--rule);max-width:8rem}
+  /* .sec-mark::after{content:"";flex:1;height:1px;background:var(--rule);max-width:8rem} */
 
   h2{font-family:var(--display);font-weight:400;
     font-size:clamp(1.9rem,3.5vw,2.7rem);line-height:1.14;letter-spacing:-.012em;
@@ -356,7 +356,7 @@
     display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:1.7rem 2.5rem}
   .people li{max-width:26rem;padding-left:0;border-left:2px solid transparent;
     transition:padding-left .35s var(--ease),border-color .35s var(--ease)}
-  .people li:hover{padding-left:.9rem;border-left-color:var(--gold)}
+  .people li:hover{padding-left:.9rem;}
   .p-name{font-family:var(--display);font-size:1.13rem;font-weight:500;display:block}
   .p-role{display:block;font-size:.88rem;font-weight:600;letter-spacing:.06em;
     text-transform:uppercase;color:var(--gold);margin:.2rem 0 .3rem}
@@ -471,7 +471,7 @@
 <a class="skip" href="#main">Skip to main content</a>
 
 <!-- Scroll progress bar. Width controlled by JS at the bottom of this file. -->
-<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+<!-- <div class="progress" aria-hidden="true"><i id="bar"></i></div> -->
 
 
 <!-- ==========================================================================
