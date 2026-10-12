@@ -895,15 +895,20 @@
   if (reduce) return;
 
   /* ---- 2. Scroll progress bar ----
-     Sets the gold bar's width to the percentage of the page scrolled. */
+     Sets the gold bar's width to the percentage of the page scrolled.
+     The <div class="progress"> markup in <body> is currently commented out,
+     so #bar does not exist. The guard below is what keeps that from throwing
+     and killing everything after it. Do not remove the guard. */
   var bar = document.getElementById('bar');
-  var onScroll = function(){
-    var h = document.documentElement;
-    var pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
-    bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
-  };
-  window.addEventListener('scroll', onScroll, {passive:true});
-  onScroll();
+  if (bar) {
+    var onScroll = function(){
+      var h = document.documentElement;
+      var pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+      bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+    };
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  }
 
   /* ---- 3. Scroll-triggered reveals ----
      IntersectionObserver fires when an element enters the viewport. We add
